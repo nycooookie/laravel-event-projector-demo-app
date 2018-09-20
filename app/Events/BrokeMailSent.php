@@ -7,10 +7,10 @@ use Spatie\EventProjector\ShouldBeStored;
 class BrokeMailSent implements ShouldBeStored
 {
     /** @var string */
-    public $accountUuid;
+    public $id;
 
-    public function __construct(string $accountUuid)
+    public function __construct(int $id)
     {
-        $this->accountUuid = $accountUuid;
+        $this->id= $id;
     }
 }

@@ -33,7 +33,7 @@ class AccountBalanceProjector implements Projector
 
     public function onMoneyAdded(MoneyAdded $event)
     {
-        $account = Account::uuid($event->accountUuid);
+        $account = Account::find($event->id);
 
         $account->balance += $event->amount;
 
@@ -46,7 +46,7 @@ class AccountBalanceProjector implements Projector
 
     public function onMoneySubtracted(MoneySubtracted $event)
     {
-        $account = Account::uuid($event->accountUuid);
+        $account = Account::find($event->id);
 
         $account->balance -= $event->amount;
 
@@ -55,7 +55,7 @@ class AccountBalanceProjector implements Projector
 
     public function onBrokeMailSent(BrokeMailSent $event)
     {
-        $account = Account::uuid($event->accountUuid);
+        $account = Account::find($event->id);
 
         $account->broke_mail_sent = true;
 
@@ -64,7 +64,7 @@ class AccountBalanceProjector implements Projector
 
     public function onAccountDeleted(AccountClosed $event)
     {
-        Account::uuid($event->accountUuid)->delete();
+        Account::find($event->id)->delete();
     }
 
     public function resetState()
@@ -74,6 +74,6 @@ class AccountBalanceProjector implements Projector
 
     public function streamEventsBy(): string
     {
-        return 'accountUuid';
+        return 'id';
     }
 }

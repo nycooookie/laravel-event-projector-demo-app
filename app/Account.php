@@ -8,6 +8,7 @@ use App\Events\MoneyAdded;
 use App\Events\MoneySubtracted;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
+use DB;
 
 class Account extends Model
 {
@@ -19,47 +20,35 @@ class Account extends Model
 
     public static function createWithAttributes(array $attributes): Account
     {
-        /*
-         * Let's generate a uuid.
-         */
-        $attributes['uuid'] = (string) Uuid::uuid4();
+        return DB::transaction(function () use ($attributes) {
+            $result = DB::select('show table status where name = ?', ['accounts'])[0];
+            $id = $result->Auto_increment;
 
-        /*
-         * The account will be created inside this event using the generated uuid.
-         */
-        event(new AccountCreated($attributes));
+            $attributes['id'] = $id;
 
-        /*
-         * The uuid will be used the retrieve the created account.
-         */
-        return static::uuid($attributes['uuid']);
+            event(new AccountCreated($attributes));
+
+            return Account::find($id);
+        });
     }
 
     public function addMoney(int $amount)
     {
-        event(new MoneyAdded($this->uuid, $amount));
+        event(new MoneyAdded($this->id, $amount));
     }
 
     public function subtractMoney(int $amount)
     {
-        event(new MoneySubtracted($this->uuid, $amount));
+        event(new MoneySubtracted($this->id, $amount));
     }
 
     public function close()
     {
-        event(new AccountClosed($this->uuid));
+        event(new AccountClosed($this->id));
     }
 
     public function isBroke(): bool
     {
         return $this->balance < 0;
-    }
-
-    /*
-     * A helper method to quickly retrieve an account by uuid.
-     */
-    public static function uuid(string $uuid): ?Account
-    {
-        return static::where('uuid', $uuid)->first();
     }
 }

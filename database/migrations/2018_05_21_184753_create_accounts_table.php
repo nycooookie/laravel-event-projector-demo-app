@@ -10,7 +10,6 @@ class CreateAccountsTable extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('uuid');
             $table->string('name');
             $table->string('email');
             $table->integer('balance')->default(0);

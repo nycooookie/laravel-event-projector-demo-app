@@ -20,7 +20,7 @@ class TransactionCountProjector implements Projector
 
     public function onMoneyAdded(MoneyAdded $event)
     {
-        $transactionCounter = TransactionCount::firstOrCreate(['account_uuid' => $event->accountUuid]);
+        $transactionCounter = TransactionCount::firstOrCreate(['account_id' => $event->id]);
 
         $transactionCounter->count += 1;
 
@@ -29,7 +29,7 @@ class TransactionCountProjector implements Projector
 
     public function onMoneySubtracted(MoneySubtracted $event)
     {
-        $transactionCounter = TransactionCount::firstOrCreate(['account_uuid' => $event->accountUuid]);
+        $transactionCounter = TransactionCount::firstOrCreate(['account_id' => $event->id]);
 
         $transactionCounter->count += 1;
 
@@ -49,7 +49,7 @@ class TransactionCountProjector implements Projector
     public function streamEventsBy(StoredEvent $storedEvent): array
     {
         return [
-            'accountUuid' => $storedEvent->event->accountUuid,
+            'id' => $storedEvent->event->id,
         ];
     }
 }

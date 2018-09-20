@@ -6,15 +6,12 @@ use Spatie\EventProjector\ShouldBeStored;
 
 class MoneySubtracted implements ShouldBeStored
 {
-    /** @var string */
-    public $accountUuid;
-
-    /** @var int */
+    public $id;
     public $amount;
 
-    public function __construct(string $accountUuid, int $amount)
+    public function __construct(int $id, int $amount)
     {
-        $this->accountUuid = $accountUuid;
+        $this->id = $id;
 
         $this->amount = $amount;
     }

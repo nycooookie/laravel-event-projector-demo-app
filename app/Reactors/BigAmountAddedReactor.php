@@ -23,7 +23,7 @@ class BigAmountAddedReactor implements EventHandler
             return;
         }
 
-        $account = Account::uuid($event->accountUuid);
+        $account = Account::find($event->id);
 
         Mail::to('director@bank.com')->send(new BigAmountAddedMail($account, $event->amount));
     }

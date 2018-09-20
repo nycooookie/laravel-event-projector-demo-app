@@ -6,15 +6,12 @@ use Spatie\EventProjector\ShouldBeStored;
 
 class AccountCreated implements ShouldBeStored
 {
-    /** @var string */
-    public $accountUuid;
-
-    /** @var array */
+    public $id;
     public $accountAttributes;
 
     public function __construct(array $accountAttributes)
     {
-        $this->accountUuid = $accountAttributes['uuid'];
+        $this->id = $accountAttributes['id'];
 
         $this->accountAttributes = $accountAttributes;
     }
